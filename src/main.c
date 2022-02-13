@@ -13,7 +13,7 @@
 uint16_t capture = 1;               // tady bude aktuální výsledek měření (času)
 uint8_t capture_flag = 0;	//tady se ukládá zda bylo provedeno měření času
 
-float vzdalenost = 0;
+uint16_t vzdalenost = 0;
 
 uint8_t minuly_stav=1; // zde si budeme ukládat minulý stav tlačítka (1=tlačítko stisknuté, 0=tlačítko uvolněné)
 uint8_t aktualni_stav=1;  // zde si budeme ukládat aktuální stav tlačítka (1=tlačítko stisknuté, 0=tlačítko uvolněné)
@@ -60,7 +60,7 @@ void process_measurment(void){
             
             GPIO_WriteHigh(GPIOC, GPIO_PIN_7);  // zahájíme trigger pulz
             
-            stage = 1;          // a bdueme čekat až uplyne čas trigger pulzulcd_gotoxy(0,0);
+            stage = 1;          // a budeme čekat až uplyne čas trigger pulzu;
             
         }
         break;
@@ -107,48 +107,16 @@ void main(){
 
     while (1){
         //if(GPIO_ReadInputPin(GPIOE,GPIO_PIN_4)==RESET){
-            process_measurment(); //zajištuje měření
-            if(capture_flag == 1){ //jakmile je nová hodnota tak se vypíše nový výsledek a flag se nastaví na 0
-                vzdalenost = capture;
-                //lcd_clear();
-                lcd_gotoxy(0,1);
-                sprintf(text,"vzd=%u",vzdalenost);
-                lcd_puts(text);
-                capture_flag = 0;
+        process_measurment(); //zajištuje měření
+        if(capture_flag == 1){ //jakmile je nová hodnota tak se vypíše nový výsledek a flag se nastaví na 0
+            vzdalenost = capture;
+            //lcd_clear();
+            lcd_gotoxy(0,1);
+            sprintf(text,"vzd=%3u",vzdalenost/58);
+            lcd_puts(text);
+            capture_flag = 0;
             }
         //}
-
-
-
-
-        /*
-        if(GPIO_ReadInputPin(GPIOE,GPIO_PIN_4)==RESET){ // zjisti jestli je tlačítko stisknuté 
-            aktualni_stav=1; // pokud ano ulož že je stisknuté   
-        }
-        else{
-            aktualni_stav=0;// jinak ulož že je uvolněné
-        }
-
-        if(minuly_stav==0 && aktualni_stav==1){ // je to okamžik stisku ?
-            GPIO_WriteHigh(GPIOC,GPIO_PIN_5); // pokud ano rozsvítíme LEDku
-            if(capture_flag == 1){ //jakmile je nová hodnota tak se vypíše nový výsledek a flag se nastaví na 0
-                vysledek = capture /1.44;
-                lcd_clear();
-                lcd_gotoxy(0,0);
-                sprintf(text,"vzdalenost=%f",vysledek);
-                lcd_puts(text);
-                capture_flag = 0;
-            }
-        }
-
-        if(minuly_stav==1 && aktualni_stav==0){ // je to okamžik uvolnění ?
-            GPIO_WriteLow(GPIOC,GPIO_PIN_5); // pokud ano zhasneme LEDku
-            lcd_clear();
-            lcd_gotoxy(0,0);
-            lcd_puts("vzdalenost=");
-        }
-        minuly_stav = aktualni_stav;
-        */
     }					
 }
 #include "__assert__.h"
