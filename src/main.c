@@ -112,7 +112,7 @@ void main(){
             vzdalenost = capture;
             //lcd_clear();
             lcd_gotoxy(0,1);
-            sprintf(text,"vzd=%3u",vzdalenost/58);
+            sprintf(text,"vzd=%3ucm",vzdalenost/58);
             lcd_puts(text);
             capture_flag = 0;
             }
